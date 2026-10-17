@@ -1,0 +1,22 @@
+digraph Facade {
+  graph [rankdir=TB, bgcolor="white", nodesep=0.65, ranksep=0.75, pad=0.25, splines=polyline];
+  node [shape=record, fontname="DejaVu Sans", fontsize=12, penwidth=1.3, color="#40566e", style="filled", fillcolor="#f7fafc", margin="0.16,0.12"];
+  edge [fontname="DejaVu Sans", fontsize=10, color="#526880", arrowsize=0.8, penwidth=1.15];
+
+  main [label="{«Client»\nMain|+ main(args: String[]): void}", fillcolor="#edf3fb"];
+  facade [label="{«Facade»\nOrderFacade|+ placeOrder(...): Result\l+ cancelOrder(id): Result\l}", fillcolor="#dfeefa", color="#2d577c", penwidth=1.8];
+  inventory [label="{«Subsystem»\nInventoryService|+ reserve(product, qty): int\l+ release(product, qty): void\l}"];
+  payment [label="{«Subsystem»\nPaymentProcessor|+ charge(total, token): String\l+ refund(paymentId): void\l}"];
+  shipping [label="{«Subsystem»\nShippingService|+ schedule(address): String\l+ cancel(trackingId): void\l}"];
+  notice [label="{«Subsystem»\nNotificationService|+ send(email, text): void\l}"];
+
+  main -> facade [label="uses", arrowhead=vee, minlen=1];
+  facade -> inventory [dir=both, arrowtail=diamond, arrowhead=none];
+  facade -> payment [dir=both, arrowtail=diamond, arrowhead=none];
+  facade -> shipping [dir=both, arrowtail=diamond, arrowhead=none];
+  facade -> notice [dir=both, arrowtail=diamond, arrowhead=none];
+  { rank=same; inventory; payment; }
+  { rank=same; shipping; notice; }
+  inventory -> shipping [style=invis];
+  payment -> notice [style=invis];
+}

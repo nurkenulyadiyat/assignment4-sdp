@@ -1,0 +1,38 @@
+@startuml
+skinparam classAttributeIconSize 0
+left to right direction
+
+class Main <<Client>> {
+  +main(args: String[]): void
+}
+class OrderFacade <<Facade>> {
+  +placeOrder(product, quantity, email, token, address): Result
+  +cancelOrder(orderId): Result
+}
+class InventoryService <<Subsystem>> {
+  +reserve(product, quantity): int
+  +release(product, quantity): void
+}
+class PaymentProcessor <<Subsystem>> {
+  +charge(total, token): String
+  +refund(paymentId): void
+}
+class ShippingService <<Subsystem>> {
+  +schedule(address): String
+  +cancel(trackingId): void
+}
+class NotificationService <<Subsystem>> {
+  +send(email, text): void
+}
+class Result <<Facade API>> {
+  +success(): boolean
+  +message(): String
+  +orderId(): String
+}
+Main --> OrderFacade : uses
+OrderFacade *-- InventoryService
+OrderFacade *-- PaymentProcessor
+OrderFacade *-- ShippingService
+OrderFacade *-- NotificationService
+OrderFacade ..> Result : returns
+@enduml
